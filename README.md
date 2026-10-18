@@ -3,6 +3,7 @@
 *Developed for Daffodil Land Tech Hackathon 2026*
 
 **👨‍💻 Team Name:** ROOTx
+
 **Developers:**
 - **MD. Jahid Hasan Topu** ([GitHub Profile](https://github.com/topu-10j))
 - **Easin Farhad Rishad**
