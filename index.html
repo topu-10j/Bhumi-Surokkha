@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ভূমি-সুরক্ষা | স্মার্ট ল্যান্ড ম্যানেজমেন্ট</title>
+    
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+
+        <!-- ================= SPLASH SCREEN ================= -->
+        <section id="splash" class="splash-screen">
+            <div class="splash-top">
+                <div class="splash-logo">
+                    <img src="images/logo.webp" alt="Govt Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Government_Seal_of_Bangladesh.svg/200px-Government_Seal_of_Bangladesh.svg.png'">
+                </div>
+                <h2 class="splash-title">ভূমি-সুরক্ষা</h2>
+                <p class="splash-subtitle">স্মার্ট ল্যান্ড ম্যানেজমেন্ট সিস্টেম</p>
+            </div>
+
+            <!-- আসল ম্যাপের ছবি -->
+            <div class="splash-map">
+                <img src="images/bd-map.jpg" alt="Bangladesh Map">
+            </div>
+
+            <div class="splash-center-text">
+                <h1>ভূমি-সুরক্ষা</h1>
+                <p>জমির নিরাপত্তা, আপনার অধিকার</p>
+            </div>
+
+            <div class="splash-bottom">
+                <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Landscape">
+            </div>
+        </section>
+
+        <!-- ================= LOGIN SCREEN ================= -->
+        <section id="login" class="lg" hidden>
+            
+            <!-- লগইন পেজের ব্যাকগ্রাউন্ড ওয়াটারমার্ক (আসল ম্যাপ) -->
+            <div class="login-watermark">
+                <img src="images/bd-map.jpg" alt="Bangladesh Map">
+            </div>
+
+            <div class="login-content">
+                <div class="login-logo">
+                    <img src="images/logo.webp" alt="Govt Logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Government_Seal_of_Bangladesh.svg/200px-Government_Seal_of_Bangladesh.svg.png'">
+                </div>
+                <h1>ভূমি-সুরক্ষা</h1>
+                <p class="login-subtitle">জমির নিরাপত্তা, আপনার অধিকার</p>
+                
+                <div class="login-form">
+                    <input id="ln" placeholder="আপনার নাম লিখুন">
+                    <input id="lp" type="tel" placeholder="মোবাইল নম্বর (01XXXXXXXXX)">
+                    <button class="btn" onclick="login()">প্রবেশ করুন</button>
+                </div>
+                
+                <p class="login-footer">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</p>
+            </div>
+        </section>
+
+        <!-- ================= MAIN SCREEN ================= -->
+        <div id="main" hidden style="display:flex;flex-direction:column;flex:1;min-height:0">
+            
+            <!-- HOME -->
+            <section id="home" class="scr" style="padding:0 0 90px">
+                <div class="hd">
+                    <div class="av">👤</div>
+                    <div style="flex:1"><small>স্বাগতম,</small><br><b id="un" style="font-size:20px"></b></div>
+                    <button class="ic" onclick="toggleMute(this)">🔊</button>
+                    <button class="ic" onclick="notif()">🔔<i class="dot"></i></button>
+                    <button class="ic" onclick="go('profile')">⚙️</button>
+                </div>
+                <div class="sb">
+                    <span>🔍</span>
+                    <input id="q" placeholder="দাগ নম্বর বা মালিকের নাম সার্চ করুন…" onkeydown="if(event.key=='Enter')search()">
+                    <button onclick="mic(t=>{document.querySelector('#q').value=t;search()})">🎤</button>
+                </div>
+                <div style="padding:0 16px">
+                    <div class="st">
+                        <div><b style="color:#059669">৫</b>সমস্যার সমাধান</div>
+                        <div><b style="color:#2563eb">৮</b>খতিয়ানের চেইন</div>
+                        <div><b style="color:#dc2626">৭</b>ফ্রড অ্যালার্ট</div>
+                    </div>
+                    <h3>আমাদের সেবাসমূহ</h3>
+                    <div class="gr">
+                        <div class="card" onclick="go('map')"><i>🗺️</i><b>জমির ম্যাপ</b><small>সার্চ ও এরিয়া</small></div>
+                        <div class="card" onclick="go('scan')"><i>📷</i><b>দলিল স্ক্যান</b><small>এআই যাচাই</small></div>
+                        <div class="card" onclick="go('inh')"><i>⚖️</i><b>উত্তরাধিকার</b><small>ইসলামি হিসাব</small></div>
+                        <div class="card red" onclick="go('fraud')"><i>⚠️</i><b>ফ্রড অ্যালার্ট</b><small style="color:#dc2626">ঝুঁকিপূর্ণ জমি</small></div>
+                        <div class="card" onclick="go('dash')"><i>📊</i><b>ড্যাশবোর্ড</b><small>কর ও পেন্ডিং</small></div>
+                        <div class="card" onclick="go('gov')"><i>🏛️</i><b>সরকারি সেবা</b><small>পর্চা, নামজারি</small></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MAP -->
+            <section id="map" class="scr" hidden>
+                <h3 style="margin:0">🗺️ জমির ম্যাপ</h3>
+                <label>বিভাগ</label><select id="sd"></select>
+                <div class="row">
+                    <div><label>জেলা</label><select id="sk"></select></div>
+                    <div><label>উপজেলা</label><select id="su"></select></div>
+                </div>
+                <button class="btn" onclick="applyArea()">ম্যাপ দেখুন</button>
+                <p id="info" style="font-size:13px;color:var(--m);margin:8px 0"></p>
+                <div id="lmap"></div>
+                <button class="btn o" onclick="locate()">📍 আমার অবস্থান</button>
+                <div class="lgd">
+                    <span><s style="background:#22c55e"></s>নির্বাচিত</span>
+                    <span><s style="background:#ef4444"></s>সরকারি খাস (কেনা যাবে না)</span>
+                    <span><s style="background:#e9d5ff;border:2px solid #7e22ce;border-radius:50%"></s>মামলাধীন (বিক্রয় নিষেধ)</span>
+                    <span><s style="background:#f3efd9"></s>সাধারণ</span>
+                </div>
+            </section>
+
+            <!-- SCAN -->
+            <section id="scan" class="scr" hidden>
+                <h3 style="margin:0">📷 দলিল স্ক্যান (এআই)</h3>
+                <p style="font-size:13px;color:var(--m)">দলিলের ছবি তুলুন বা আপলোড করুন — আসল না জাল যাচাই হবে।</p>
+                <input id="sf" type="file" accept="image/*" capture="environment">
+                <img id="sp" hidden style="width:100%;border-radius:12px;margin-top:8px">
+                <button id="sb" class="btn" hidden>যাচাই করুন</button>
+                <div id="sr" style="margin-top:12px"></div>
+            </section>
+
+            <!-- INHERITANCE -->
+            <section id="inh" class="scr" hidden>
+                <h3 style="margin:0">⚖️ উত্তরাধিকার হিসাব</h3>
+                <label>মৃত ব্যক্তি</label>
+                <select id="ig"><option value="m">পুরুষ (বাবা)</option><option value="f">নারী (মা)</option></select>
+                <label>মোট জমি (শতাংশ)</label>
+                <input id="ia" type="number" value="100">
+                <div class="row">
+                    <div><label>ছেলে</label><input id="iso" type="number" min="0" value="2"></div>
+                    <div><label>মেয়ে</label><input id="ida" type="number" min="0" value="1"></div>
+                </div>
+                <label><input id="isp" type="checkbox" checked style="width:auto"> স্ত্রী/স্বামী জীবিত</label><br>
+                <label><input id="ifa" type="checkbox" style="width:auto"> পিতা জীবিত</label><br>
+                <label><input id="imo" type="checkbox" style="width:auto"> মাতা জীবিত</label>
+                <button class="btn" onclick="calc()">হিসাব করুন</button>
+                <div id="ir" style="margin-top:12px"></div>
+            </section>
+
+            <!-- FRAUD -->
+            <section id="fraud" class="scr" hidden>
+                <h3 style="margin:0">⚠️ ফ্রড অ্যালার্ট</h3>
+                <div class="a"><b>দাগ ১০৭</b> — একই জমি দুইজনের কাছে বিক্রির অভিযোগ</div>
+                <div class="a"><b>দাগ ২১৪</b> — খাস জমি ব্যক্তিনামে দেখানোর চেষ্টা</div>
+                <div class="a"><b>দাগ ৩৩</b> — জাল দলিলের রিপোর্ট (৩টি)</div>
+                <div class="a"><b>দাগ ৫৮</b> — মামলাধীন, তবু বিক্রির বিজ্ঞাপন</div>
+                <p style="font-size:13px;color:var(--m);margin-top:10px">💡 জমি কেনার আগে ম্যাপে লাল/বেগুনি চিহ্ন দেখুন এবং খতিয়ানের চেইন মিলিয়ে নিন।</p>
+            </section>
+
+            <!-- DASHBOARD -->
+            <section id="dash" class="scr" hidden>
+                <h3 style="margin:0">📊 আমার ড্যাশবোর্ড</h3>
+                <div class="box" style="margin-top:8px">
+                    <div class="bd"><span>দাগ ৩৫ — ভূমি কর</span><b style="color:#dc2626">বকেয়া ৳১,২৫০</b></div>
+                    <div class="bd"><span>দাগ ৪২ — ভূমি কর</span><b style="color:#059669">পরিশোধিত</b></div>
+                    <div class="bd"><span>দাগ ৭১ — নামজারি</span><b style="color:#d97706">পেন্ডিং</b></div>
+                </div>
+                <a class="btn" target="_blank" href="https://ldtax.gov.bd">💳 অনলাইনে কর দিন</a>
+            </section>
+
+            <!-- GOV -->
+            <section id="gov" class="scr" hidden>
+                <h3 style="margin:0">🏛️ সরকারি সেবা (সরাসরি লিংক)</h3>
+                <a class="btn" target="_blank" href="https://dlrms.land.gov.bd">📄 পর্চা / খতিয়ান</a>
+                <a class="btn" target="_blank" href="https://mutation.land.gov.bd">📝 নামজারি আবেদন</a>
+                <a class="btn" target="_blank" href="https://ldtax.gov.bd">💰 ভূমি উন্নয়ন কর</a>
+                <a class="btn o" target="_blank" href="https://land.gov.bd">🏢 ভূমি মন্ত্রণালয়</a>
+            </section>
+
+            <!-- PROFILE -->
+            <section id="profile" class="scr" hidden>
+                <h3 style="margin:0">👤 প্রোফাইল ও সেটিংস</h3>
+                <label>নাম</label><input id="pn"><label>ফোন নম্বর</label><input id="pp" type="tel">
+                <button class="btn" onclick="saveP()">সংরক্ষণ</button>
+                <button class="btn o" onclick="notif()">🔔 নোটিফিকেশন দেখুন</button>
+                <button class="btn o" style="color:#dc2626;border-color:#dc2626" onclick="logout()">লগআউট</button>
+            </section>
+
+            <button class="fab" onclick="openBot()">🎙️</button>
+            
+            <!-- BOTTOM NAV -->
+            <nav>
+                <button data-g="home" onclick="go('home')"><span>🏠</span>হোম</button>
+                <button data-g="map" onclick="go('map')"><span>🗺️</span>ম্যাপ</button>
+                <button data-g="scan" onclick="go('scan')"><span>📷</span>স্ক্যানার</button>
+                <button data-g="profile" onclick="go('profile')"><span>👤</span>প্রোফাইল</button>
+            </nav>
+        </div>
+
+        <!-- SHEET + BOT -->
+        <div id="ov" class="ov" hidden onclick="if(event.target==this)this.hidden=true">
+            <div class="sh" id="shc"></div>
+        </div>
+        <div id="bot" class="ov" hidden onclick="if(event.target==this)this.hidden=true">
+            <div class="sh" style="height:70%;display:flex;flex-direction:column">
+                <b>🤖 ভয়েস সহকারী</b>
+                <div id="log" style="flex:1;overflow:auto;margin:8px 0"></div>
+                <div class="row">
+                    <input id="bi" placeholder="লিখুন…" onkeydown="if(event.key=='Enter'){handle(this.value);this.value=''}">
+                    <button class="btn" style="width:60px;flex:none;margin:0" onclick="mic(handle)">🎤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts Load Order -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/bot.js"></script>
+    <script src="js/features.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
